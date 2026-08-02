@@ -10,3 +10,6 @@ data/vector_db/
 
 # 日志与临时文件
 *.log
+
+# 本地开发配置（AI 助手工作文档，不提交）
+CLAUDE.md
