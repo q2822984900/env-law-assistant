@@ -1,0 +1,8 @@
+PyMuPDF==1.27.2.3
+python-docx==1.2.0
+langchain-text-splitters==1.1.2
+sentence-transformers==5.6.1
+chromadb==1.5.9
+langchain-openai==1.4.1
+streamlit==1.60.0
+python-dotenv==1.2.2

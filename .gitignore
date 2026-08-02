@@ -1,0 +1,12 @@
+# 密钥与环境变量（含 DeepSeek API Key，切勿提交）
+.env
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 向量库（可由 python ingest.py 重建）
+data/vector_db/
+
+# 日志与临时文件
+*.log
