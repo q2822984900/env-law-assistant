@@ -125,7 +125,7 @@ def split_articles(articles: list[dict]) -> list[dict]:
 
 def main() -> None:
     files = sorted(
-        p for p in RAW_DIR.iterdir()
+        p for p in RAW_DIR.rglob("*")
         if p.is_file() and p.suffix.lower() in (".docx", ".pdf")
     )
     if not files:
