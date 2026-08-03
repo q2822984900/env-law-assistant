@@ -6,3 +6,5 @@ chromadb==1.5.9
 langchain-openai==1.4.1
 streamlit==1.60.0
 python-dotenv==1.2.2
+jieba==0.42.1
+rank-bm25==0.2.2

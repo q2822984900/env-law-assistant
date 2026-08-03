@@ -12,34 +12,26 @@ from pathlib import Path
 
 import dotenv
 import streamlit as st
-import chromadb
-from sentence_transformers import SentenceTransformer
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
+from retrieval import HybridRetriever
 
 dotenv.load_dotenv()
 
 # ---------- 配置 ----------
 BASE_DIR = Path(__file__).resolve().parent
 VECTOR_DB_DIR = BASE_DIR / "data" / "vector_db"
-COLLECTION_NAME = "env_law"
-MODEL_NAME = "BAAI/bge-small-zh-v1.5"
 TOP_K = 8
-# bge 官方建议：检索查询（短句）加指令前缀，可显著提升命中率
-BGE_QUERY_PREFIX = "为这个句子生成表示以用于检索相关文章："
 DEEPSEEK_BASE_URL = "https://api.deepseek.com"
 DEEPSEEK_MODEL = "deepseek-v4-flash"
 
 
-@st.cache_resource(show_spinner="加载向量库与向量模型（首次约需十几秒）...")
+@st.cache_resource(show_spinner="加载检索引擎（向量模型 + 关键词索引，首次约需十几秒）...")
 def load_resources():
-    """进程级缓存：向量库 + embedding 模型，只加载一次。"""
+    """进程级缓存：混合检索器（向量 + BM25），只加载一次。"""
     if not VECTOR_DB_DIR.exists() or not any(VECTOR_DB_DIR.iterdir()):
         return None
-    client = chromadb.PersistentClient(path=str(VECTOR_DB_DIR))
-    collection = client.get_collection(COLLECTION_NAME)
-    embedder = SentenceTransformer(MODEL_NAME)
-    return client, collection, embedder
+    return HybridRetriever(top_k=TOP_K)
 
 
 def build_llm() -> ChatOpenAI | None:
@@ -81,7 +73,7 @@ def main() -> None:
     if resources is None:
         st.warning("尚未生成向量库。请在项目根目录先运行：`python ingest.py`")
         st.stop()
-    _, collection, embedder = resources
+    retriever = resources
 
     llm = build_llm()
     if llm is None:
@@ -108,16 +100,7 @@ def main() -> None:
         with st.chat_message("assistant"):
             # 1. 检索
             with st.spinner("检索相关条文..."):
-                qv = embedder.encode(
-                    [BGE_QUERY_PREFIX + prompt], normalize_embeddings=True
-                )
-                hits = collection.query(
-                    query_embeddings=qv.tolist(),
-                    n_results=TOP_K,
-                    include=["documents", "metadatas"],
-                )
-            docs = hits["documents"][0]
-            metas = hits["metadatas"][0]
+                docs, metas = retriever.retrieve(prompt)
 
             # 2. 构造提示词
             payloads: list[dict] = []
