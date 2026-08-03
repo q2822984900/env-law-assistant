@@ -122,9 +122,10 @@ def main() -> None:
 
 要求：
 1. 仅依据上述条文回答，忽略与本问题无关的条文，不要使用条文之外的知识
-2. 若条文不足以回答用户问题，请明确说明"资料中未找到相关依据"
-3. 正文中引用条文时，请写明"[编号]《法律名称》第X条"（如：[1]《排污许可管理条例》第三十四条），让用户知道编号对应的具体条文
-4. 回答结尾请按 [编号] 列出本次引用的条文来源"""
+2. 若条文不足以回答用户问题，请明确说明"资料中未找到相关依据"，不要自行推断
+3. 每条结论应直接引用对应条文的关键原句，尽量少用转述，不得编造条文内容
+4. 正文中引用条文时，请写明"[编号]《法律名称》第X条"（如：[1]《排污许可管理条例》第三十四条），让用户知道编号对应的具体条文
+5. 回答结尾请按 [编号] 列出本次引用的条文来源"""
 
             # 3. 生成
             if llm is None:
@@ -155,6 +156,13 @@ def main() -> None:
                 [payloads[i - 1] for i in used if 1 <= i <= len(payloads)]
                 or payloads
             )
+            # 引用白名单校验：编号超出注入范围 = 疑似幻觉引用
+            invalid = sorted({i for i in used if not (1 <= i <= len(payloads))})
+            if invalid:
+                st.warning(
+                    f"检测到回答引用了不存在的条文编号 {invalid}，"
+                    "可能为模型生成误差，请以「引用出处」中的原文为准。"
+                )
             render_sources(display)
             st.session_state.messages.append(
                 {"role": "assistant", "content": answer, "sources": display}
