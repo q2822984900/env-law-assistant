@@ -21,7 +21,7 @@ dotenv.load_dotenv()
 # ---------- 配置 ----------
 BASE_DIR = Path(__file__).resolve().parent
 VECTOR_DB_DIR = BASE_DIR / "data" / "vector_db"
-TOP_K = 8
+TOP_K = 16
 DEEPSEEK_BASE_URL = "https://api.deepseek.com"
 DEEPSEEK_MODEL = "deepseek-v4-flash"
 
