@@ -20,7 +20,7 @@ import jieba
 from rank_bm25 import BM25Okapi
 from sentence_transformers import CrossEncoder, SentenceTransformer
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parents[1]  # 项目根（本文件在 src/ 下）
 VECTOR_DB_DIR = BASE_DIR / "data" / "vector_db"
 # 向量模型：本机若有 ModelScope 下载的本地副本则离线加载，否则按 HF 名自动下载
 _LOCAL_MODEL_DIR = Path("D:/models/bge-small-zh-v1.5")

@@ -1,6 +1,6 @@
 """环境法规问答助手 · 建库脚本
 
-用法：python ingest.py
+用法：python -m src.ingest
 将 data/raw/ 下的法规文件（.docx / .pdf）解析、按条文切块、向量化后
 写入 Chroma 向量库（data/vector_db/）。重复运行会清空重建，可安全重复执行。
 
@@ -21,7 +21,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sentence_transformers import SentenceTransformer
 
 # ---------- 配置 ----------
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parents[1]  # 项目根（本文件在 src/ 下）
 RAW_DIR = BASE_DIR / "data" / "raw"
 VECTOR_DB_DIR = BASE_DIR / "data" / "vector_db"
 COLLECTION_NAME = "env_law"

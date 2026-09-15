@@ -15,6 +15,9 @@ import json
 import sys
 from pathlib import Path
 
+# 让脚本无论从哪个工作目录运行，都能找到 src/ 下的检索模块
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
 from retrieval import HybridRetriever
 
 BASE_DIR = Path(__file__).resolve().parent.parent

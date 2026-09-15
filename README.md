@@ -35,7 +35,7 @@ DEEPSEEK_API_KEY=sk-你的Key
 ### 4. 构建向量库（首次运行）
 
 ```bash
-python ingest.py
+python -m src.ingest
 ```
 
 脚本会解析 `data/raw/` 下的法规文件（`.docx` / `.pdf`），按条文切块、向量化后存入本地索引。**重复运行会重建索引，可安全重跑**。
@@ -46,7 +46,7 @@ python ingest.py
 ### 5. 启动问答界面
 
 ```bash
-python -m streamlit run app.py
+python -m streamlit run src/app.py
 ```
 
 浏览器访问 **http://localhost:8501** 即可开始提问。
@@ -70,11 +70,17 @@ python -m streamlit run app.py
 
 ```
 env-law-assistant/
+├── src/              # 源码
+│   ├── ingest.py     # 建库脚本（解析 + 切分 + 向量化 + 入库）
+│   ├── retrieval.py  # 检索模块（向量 + BM25 混合检索）
+│   └── app.py        # Streamlit 问答应用
+├── eval/             # 评测
+│   ├── run_eval.py       # 检索召回评测
+│   ├── eval_answer.py    # 回答质量评测
+│   └── questions.json    # 评测集（20 题）
 ├── data/
 │   ├── raw/          # 法规源文件（可自行增删）
 │   └── vector_db/    # 检索索引（ingest.py 自动生成）
-├── ingest.py         # 建库脚本（解析 + 切分 + 向量化 + 入库）
-├── app.py            # Streamlit 问答应用
 ├── requirements.txt  # 依赖清单
 └── .env.example      # 环境变量模板
 ```

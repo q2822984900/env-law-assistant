@@ -21,6 +21,9 @@ import dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 
+# 让脚本无论从哪个工作目录运行，都能找到 src/ 下的检索模块
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
 from retrieval import HybridRetriever
 
 dotenv.load_dotenv()

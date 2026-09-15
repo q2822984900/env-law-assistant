@@ -1,6 +1,6 @@
 """环境法规问答助手 · Streamlit 问答应用
 
-用法：streamlit run app.py
+用法：python -m streamlit run src/app.py
 流程：用户提问 → bge 向量化 → Chroma 检索 top-k 条文 → DeepSeek 生成 → 展示（含出处）
 """
 
@@ -19,7 +19,7 @@ from retrieval import HybridRetriever
 dotenv.load_dotenv()
 
 # ---------- 配置 ----------
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parents[1]  # 项目根（本文件在 src/ 下）
 VECTOR_DB_DIR = BASE_DIR / "data" / "vector_db"
 TOP_K = 16
 DEEPSEEK_BASE_URL = "https://api.deepseek.com"
