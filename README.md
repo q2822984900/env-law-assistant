@@ -40,10 +40,13 @@ python ingest.py
 
 脚本会解析 `data/raw/` 下的法规文件（`.docx` / `.pdf`），按条文切块、向量化后存入本地索引。**重复运行会重建索引，可安全重跑**。
 
+> **关于向量模型**：脚本使用 [BAAI/bge-small-zh-v1.5](https://huggingface.co/BAAI/bge-small-zh-v1.5)（约 100MB），首次运行会自动下载到本地缓存。
+> 若下载失败（国内网络常见），先执行 `set HF_ENDPOINT=https://hf-mirror.com`（Linux/macOS 用 `export`）再重跑；或用 `pip install modelscope` 后通过 ModelScope 下载。
+
 ### 5. 启动问答界面
 
 ```bash
-streamlit run app.py
+python -m streamlit run app.py
 ```
 
 浏览器访问 **http://localhost:8501** 即可开始提问。

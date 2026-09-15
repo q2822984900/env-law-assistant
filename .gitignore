@@ -13,3 +13,6 @@ data/vector_db/
 
 # 本地开发配置（.claude/ 下为 AI 工作文档与设置，不入库）
 .claude/
+
+# 内部 AI 开发说明（与 .claude/ 同性质，不入库）
+AGENTS.md

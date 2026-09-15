@@ -25,7 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent
 RAW_DIR = BASE_DIR / "data" / "raw"
 VECTOR_DB_DIR = BASE_DIR / "data" / "vector_db"
 COLLECTION_NAME = "env_law"
-MODEL_NAME = "BAAI/bge-small-zh-v1.5"
+# 向量模型：本机若有 ModelScope 下载的本地副本则离线加载，否则按 HF 名自动下载
+_LOCAL_MODEL_DIR = Path("D:/models/bge-small-zh-v1.5")
+MODEL_NAME = str(_LOCAL_MODEL_DIR) if _LOCAL_MODEL_DIR.exists() else "BAAI/bge-small-zh-v1.5"
 CHUNK_SIZE = 500          # 超长条文二次切分的单块上限
 CHUNK_OVERLAP = 100       # 二次切分的重叠字符数
 BATCH_SIZE = 100          # 写入 Chroma 的批量大小

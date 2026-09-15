@@ -22,7 +22,9 @@ from sentence_transformers import CrossEncoder, SentenceTransformer
 
 BASE_DIR = Path(__file__).resolve().parent
 VECTOR_DB_DIR = BASE_DIR / "data" / "vector_db"
-MODEL_NAME = "BAAI/bge-small-zh-v1.5"
+# 向量模型：本机若有 ModelScope 下载的本地副本则离线加载，否则按 HF 名自动下载
+_LOCAL_MODEL_DIR = Path("D:/models/bge-small-zh-v1.5")
+MODEL_NAME = str(_LOCAL_MODEL_DIR) if _LOCAL_MODEL_DIR.exists() else "BAAI/bge-small-zh-v1.5"
 RERANKER_PATH = "D:/models/bge-reranker-base"
 BGE_QUERY_PREFIX = "为这个句子生成表示以用于检索相关文章："
 RRF_CONSTANT = 60  # RRF 标准常数
@@ -37,7 +39,9 @@ def _tokenize(text: str) -> list[str]:
 class HybridRetriever:
     def __init__(self, top_k: int = 8, use_rerank: bool = False) -> None:
         self.top_k = top_k
-        self.embedder = SentenceTransformer(MODEL_NAME, local_files_only=True)
+        self.embedder = SentenceTransformer(
+            MODEL_NAME, local_files_only=_LOCAL_MODEL_DIR.exists()
+        )
         self.client = chromadb.PersistentClient(path=str(VECTOR_DB_DIR))
         self.collection = self.client.get_collection("env_law")
         self._load_all()
